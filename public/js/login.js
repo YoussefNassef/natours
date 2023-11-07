@@ -21,7 +21,6 @@ const login = async (email, password) => {
         password
       }
     });
-    console.log(res);
     if (res.data.status === 'success') {
       showAlert('success', 'loggedIn Successfully');
       window.setTimeout(() => {
@@ -29,7 +28,6 @@ const login = async (email, password) => {
       }, 500);
     }
   } catch (err) {
-    console.log(err);
     showAlert('error', err.response.data.message);
     window.setTimeout(hideAlert, 3000);
   }
@@ -43,7 +41,6 @@ const logout = async () => {
     });
     if (res.data.status === 'success') location.reload(true);
   } catch (err) {
-    console.log(err);
     showAlert('error', 'Error logging out! Try again');
     window.setTimeout(hideAlert, 3000);
   }

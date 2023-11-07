@@ -14,7 +14,7 @@ const xss = require('xss-clean');
 
 // Start express app
 const app = express();
-
+const compression = require('compression');
 const morgan = require('morgan');
 const AppError = require('./util/appError');
 const globalErrorHandling = require('./controller/errorController');
@@ -67,6 +67,8 @@ app.use(
     ]
   })
 );
+
+app.use(compression());
 
 app.use('/api', limiter);
 

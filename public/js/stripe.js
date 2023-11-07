@@ -8,7 +8,6 @@ const btn = document.querySelector('#book-tour');
 const bookTour = async tourId => {
   try {
     const session = await axios(`/api/v2/bookings/checkout-session/${tourId}`);
-    console.log(session);
     await stripe.redirectToCheckout({
       sessionId: session.data.session.id
     });
