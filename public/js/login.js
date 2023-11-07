@@ -39,7 +39,7 @@ const logout = async () => {
       method: 'GET',
       url: '/api/v2/users/logout'
     });
-    if (res.data.status === 'success') location.reload(true);
+    if (res.data.status === 'success') location.assign('/');
   } catch (err) {
     showAlert('error', 'Error logging out! Try again');
     window.setTimeout(hideAlert, 3000);
