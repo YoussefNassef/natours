@@ -12,7 +12,9 @@ const cookieParser = require('cookie-parser');
 
 const xss = require('xss-clean');
 
+// Start express app
 const app = express();
+
 const morgan = require('morgan');
 const AppError = require('./util/appError');
 const globalErrorHandling = require('./controller/errorController');
