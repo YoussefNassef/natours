@@ -6,8 +6,6 @@ const hpp = require('hpp');
 const mongoSanitize = require('express-mongo-sanitize');
 const path = require('path');
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
 const cookieParser = require('cookie-parser');
 
 const xss = require('xss-clean');
