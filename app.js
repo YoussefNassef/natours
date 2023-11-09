@@ -6,6 +6,8 @@ const hpp = require('hpp');
 const mongoSanitize = require('express-mongo-sanitize');
 const path = require('path');
 
+const cors = require('cors');
+
 const cookieParser = require('cookie-parser');
 
 const xss = require('xss-clean');
@@ -35,6 +37,9 @@ app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// implement cors
+app.use(cors());
+app.options('*', cors());
 // set http secure
 // app.use(helmet());
 
