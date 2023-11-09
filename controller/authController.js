@@ -7,25 +7,22 @@ const catchAsync = require('../util/catchAsync');
 const AppError = require('../util/appError');
 const Email = require('../util/email');
 
-const cookieOption = {
-  expires: new Date(
-    Date.now() + process.env.JWT_EXPIRES_COOKIES_IN * 24 * 60 * 60 * 1000
-  ),
-  httpOnly: true
-};
-
-if (process.env.NODE_ENV === 'production') cookieOption.secure = true;
-
 const signToken = id => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN
   });
 };
 
-const createSendToken = (status, user, res) => {
+const createSendToken = (status, user, res, req) => {
   const token = signToken(user._id);
 
-  res.cookie('JWT', token, cookieOption);
+  res.cookie('JWT', token, {
+    expires: new Date(
+      Date.now() + process.env.JWT_EXPIRES_COOKIES_IN * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+    secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
+  });
 
   user.password = undefined;
 
@@ -48,7 +45,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   });
   const url = `${req.protocol}://${req.get('host')}/me`;
   await new Email(newUser, url).sendWelcome();
-  createSendToken(201, newUser, res);
+  createSendToken(201, newUser, res, req);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -66,7 +63,7 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Incorrect email or password', 401));
   }
   //3) if every things ok send token to client
-  createSendToken(200, user, res);
+  createSendToken(200, user, res, req);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -212,7 +209,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   await user.save();
   // 3) Update changedPasswordAt property for the user
   // 4)Log the user In send JWT
-  createSendToken(200, user, res);
+  createSendToken(200, user, res, req);
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
@@ -227,5 +224,5 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   user.confirmPassword = req.body.confirmPassword;
   await user.save();
   // 4) log in user,send token
-  createSendToken(200, user, res);
+  createSendToken(200, user, res, req);
 });

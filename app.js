@@ -12,6 +12,8 @@ const xss = require('xss-clean');
 
 // Start express app
 const app = express();
+
+app.enable('trust proxy');
 const compression = require('compression');
 const morgan = require('morgan');
 const AppError = require('./util/appError');
